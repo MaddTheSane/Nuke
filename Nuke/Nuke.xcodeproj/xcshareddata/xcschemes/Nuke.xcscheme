@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0C91748F1BAE99EE004A7905"
                BuildableName = "Nuke.framework"
-               BlueprintName = "Nuke"
+               BlueprintName = "Nuke (iOS)"
                ReferencedContainer = "container:Nuke.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,7 +47,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0C91748F1BAE99EE004A7905"
             BuildableName = "Nuke.framework"
-            BlueprintName = "Nuke"
+            BlueprintName = "Nuke (iOS)"
             ReferencedContainer = "container:Nuke.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,7 +65,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0C91748F1BAE99EE004A7905"
             BuildableName = "Nuke.framework"
-            BlueprintName = "Nuke"
+            BlueprintName = "Nuke (iOS)"
             ReferencedContainer = "container:Nuke.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

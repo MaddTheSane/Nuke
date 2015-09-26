@@ -2,7 +2,11 @@
 //
 // Copyright (c) 2015 Alexander Grebenyuk (github.com/kean).
 
-import UIKit
+#if os(OSX)
+	import Cocoa
+	#else
+	import UIKit
+#endif
 
 public protocol ImageMemoryCaching {
     func cachedResponseForKey(key: AnyObject) -> ImageCachedResponse?
@@ -11,10 +15,10 @@ public protocol ImageMemoryCaching {
 }
 
 public class ImageCachedResponse {
-    public let image: UIImage
+    public let image: NukeImage
     public let userInfo: Any?
     
-    public init(image: UIImage, userInfo: Any?) {
+    public init(image: NukeImage, userInfo: Any?) {
         self.image = image
         self.userInfo = userInfo
     }
@@ -59,7 +63,7 @@ public class ImageMemoryCache: ImageMemoryCaching {
     }
     
     public class func recommendedCacheTotalLimit() -> Int {
-        #if os(iOS)
+        #if os(iOS) || os(OSX)
             let physicalMemory = NSProcessInfo.processInfo().physicalMemory
             let ratio = physicalMemory <= (1024 * 1024 * 512 /* 512 Mb */) ? 0.1 : 0.2
             return Int(Double(physicalMemory) * ratio)

@@ -2,7 +2,11 @@
 //
 // Copyright (c) 2015 Alexander Grebenyuk (github.com/kean).
 
+#if os(OSX)
+	import Cocoa
+	#else
 import UIKit
+	#endif
 
 // MARK: ImageDataLoading
 

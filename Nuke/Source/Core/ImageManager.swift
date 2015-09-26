@@ -2,7 +2,11 @@
 //
 // Copyright (c) 2015 Alexander Grebenyuk (github.com/kean).
 
-import UIKit
+#if os(OSX)
+	import Cocoa
+	#else
+	import UIKit
+#endif
 
 public let ImageManagerErrorDomain = "Nuke.ImageManagerErrorDomain"
 public let ImageManagerErrorCancelled = -1

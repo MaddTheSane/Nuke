@@ -2,11 +2,15 @@
 //
 // Copyright (c) 2015 Alexander Grebenyuk (github.com/kean).
 
-import UIKit
+#if os(OSX)
+	import Cocoa
+	#else
+	import UIKit
+#endif
 
 internal protocol ImageManagerLoaderDelegate: class {
     func imageLoader(imageLoader: ImageManagerLoader, imageTask: ImageTask, didUpdateProgressWithCompletedUnitCount completedUnitCount: Int64, totalUnitCount: Int64)
-    func imageLoader(imageLoader: ImageManagerLoader, imageTask: ImageTask, didCompleteWithImage image: UIImage?, error: ErrorType?)
+    func imageLoader(imageLoader: ImageManagerLoader, imageTask: ImageTask, didCompleteWithImage image: NukeImage?, error: ErrorType?)
 }
 
 internal class ImageManagerLoader {
@@ -80,7 +84,7 @@ internal class ImageManagerLoader {
         }
     }
     
-    private func sessionTask(sessionTask: ImageLoaderSessionTask, didCompleteWithImage image: UIImage?, error: ErrorType?) {
+    private func sessionTask(sessionTask: ImageLoaderSessionTask, didCompleteWithImage image: NukeImage?, error: ErrorType?) {
         dispatch_async(self.queue) {
             for loaderTask in sessionTask.tasks {
                 self.processImage(image, error: error, forLoaderTask: loaderTask)
@@ -91,7 +95,7 @@ internal class ImageManagerLoader {
         }
     }
     
-    private func processImage(image: UIImage?, error: ErrorType?, forLoaderTask task: ImageLoaderTask) {
+    private func processImage(image: NukeImage?, error: ErrorType?, forLoaderTask task: ImageLoaderTask) {
         if let image = image, processor = self.processorForRequest(task.request) {
             let operation = NSBlockOperation { [weak self] in
                 let processedImage = processor.processImage(image)
@@ -117,7 +121,7 @@ internal class ImageManagerLoader {
         return processors.isEmpty ? nil : ImageProcessorComposition(processors: processors)
     }
     
-    private func loaderTask(task: ImageLoaderTask, didCompleteWithImage image: UIImage?, error: ErrorType?) {
+    private func loaderTask(task: ImageLoaderTask, didCompleteWithImage image: NukeImage?, error: ErrorType?) {
         dispatch_async(self.queue) {
             self.delegate?.imageLoader(self, imageTask: task.imageTask, didCompleteWithImage: image, error: error)
             self.executingTasks[task.imageTask] = nil
@@ -170,7 +174,7 @@ internal class ImageManagerLoader {
         return self.conf.cache?.cachedResponseForKey(ImageRequestKey(request, type: .Cache, owner: self))
     }
     
-    private func storeImage(image: UIImage?, forRequest request: ImageRequest) {
+    private func storeImage(image: NukeImage?, forRequest request: ImageRequest) {
         if let image = image {
             let cachedResponse = ImageCachedResponse(image: image, userInfo: nil)
             self.conf.cache?.storeResponse(cachedResponse, forKey: ImageRequestKey(request, type: .Cache, owner: self))

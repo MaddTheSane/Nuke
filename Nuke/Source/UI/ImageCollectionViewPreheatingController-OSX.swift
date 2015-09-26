@@ -2,7 +2,7 @@
 //
 // Copyright (c) 2015 Alexander Grebenyuk (github.com/kean).
 
-import Foundation
+import Cocoa
 
 /** Tells the delegate that the preheat window changed significantly.
 
@@ -14,7 +14,7 @@ public protocol ImageCollectionViewPreheatingControllerDelegate: class {
 
 public class ImageCollectionViewPreheatingController: NSObject {
     public weak var delegate: ImageCollectionViewPreheatingControllerDelegate?
-    public let collectionView: UICollectionView
+    public let collectionView: NSCollectionView
     public internal(set) var preheatIndexPath = Set<NSIndexPath>()
     
     /** The proportion of the collection view bounds (either width or height depending on the scroll direction) that is used as a preheat window. Default value is 2.0.
@@ -39,7 +39,7 @@ public class ImageCollectionViewPreheatingController: NSObject {
         self.collectionView.removeObserver(self, forKeyPath: "contentOffset", context: nil)
     }
     
-    public init(collectionView: UICollectionView) {
+    public init(collectionView: NSCollectionView) {
         self.collectionView = collectionView
         super.init()
         self.collectionView.addObserver(self, forKeyPath: "contentOffset", options: [.New], context: nil)
@@ -70,10 +70,10 @@ public class ImageCollectionViewPreheatingController: NSObject {
     }
     
     private func updatePreheatRectIndexPaths() {
-        let layout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let layout = self.collectionView.collectionViewLayout as! NSCollectionViewFlowLayout
         let isVertical = layout.scrollDirection == .Vertical
         
-        let offset = self.collectionView.contentOffset
+        let offset = CGPoint(x: 2, y: 2)//self.collectionView.contentOffset
         let delta = isVertical ? self.preheatContentOffset.y - offset.y : self.preheatContentOffset.x - offset.x
         let margin = isVertical ? Double(CGRectGetHeight(self.collectionView.bounds)) * self.preheatRectUpdateRatio : Double(CGRectGetWidth(self.collectionView.bounds)) * self.preheatRectUpdateRatio
         
@@ -110,7 +110,7 @@ public class ImageCollectionViewPreheatingController: NSObject {
     }
     
     private func preheatRectForScrollingForward(forward: Bool) -> CGRect {
-        let layout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let layout = self.collectionView.collectionViewLayout as! NSCollectionViewFlowLayout
         let isVertical = layout.scrollDirection == .Vertical
         
         // UIScrollView bounds works differently from UIView bounds. It adds the contentOffset to the rect.
@@ -131,7 +131,7 @@ public class ImageCollectionViewPreheatingController: NSObject {
     }
     
     private func indexPathsForElementsInRect(rect: CGRect) -> [NSIndexPath] {
-        guard let layoutAttributes = self.collectionView.collectionViewLayout.layoutAttributesForElementsInRect(rect) else {
+        guard let layoutAttributes = self.collectionView.collectionViewLayout?.layoutAttributesForElementsInRect(rect) else {
             return []
         }
         return layoutAttributes.filter{ return $0.representedElementCategory == .Cell }.map{ return $0.indexPath }

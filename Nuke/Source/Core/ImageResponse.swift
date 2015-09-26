@@ -2,13 +2,19 @@
 //
 // Copyright (c) 2015 Alexander Grebenyuk (github.com/kean).
 
-import UIKit
+#if os(OSX)
+	import Cocoa
+	public typealias NukeImage = NSImage
+#else
+	import UIKit
+	public typealias NukeImage = UIImage
+#endif
 
 public enum ImageResponse {
-    case Success(UIImage, ImageResponseInfo)
+    case Success(NukeImage, ImageResponseInfo)
     case Failure(ErrorType)
 
-    public var image: UIImage? {
+    public var image: NukeImage? {
         switch self {
         case let .Success(image, _): return image
         case .Failure(_): return nil
