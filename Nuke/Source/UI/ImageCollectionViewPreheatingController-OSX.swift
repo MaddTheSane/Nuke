@@ -134,6 +134,6 @@ public class ImageCollectionViewPreheatingController: NSObject {
         guard let layoutAttributes = self.collectionView.collectionViewLayout?.layoutAttributesForElementsInRect(rect) else {
             return []
         }
-        return layoutAttributes.filter{ return $0.representedElementCategory == .Cell }.map{ return $0.indexPath }
+        return layoutAttributes.filter{ return $0.representedElementCategory == .Item }.map{ return $0.indexPath! }
     }
 }

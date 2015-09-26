@@ -80,6 +80,8 @@ public func ==(lhs: ImageProcessorComposition, rhs: ImageProcessorComposition) -
 #if os(OSX)
 	
 	private func maxImageSize(anImg: NSImage) -> CGSize {
+		//TODO: implement
+
 		//		let bitmapSize = CGSize(width: CGImageGetWidth(image.CGImage), height: CGImageGetHeight(image.CGImage))
 
 		return .zero
@@ -94,6 +96,7 @@ public func ==(lhs: ImageProcessorComposition, rhs: ImageProcessorComposition) -
 	}
 	
 	private func decompressImage(image: NSImage, scale: Double) -> NSImage {
+		//TODO: implement
 		/*
 		let imageRef = image.CGImage
 		var imageSize = CGSize(width: CGImageGetWidth(imageRef), height: CGImageGetHeight(imageRef))

@@ -70,9 +70,10 @@ public class ImageView: NSImageView {
             if self.allowsAnimations && !info.fastResponse && self.image == nil {
                 self.image = image
                 self.alphaValue = 0.0
-                NSView.animateWithDuration(0.25) {
-                    self.alpha = 1.0
-                }
+				//TODO: OS X port
+                //NSView.animateWithDuration(0.25) {
+                //    self.alpha = 1.0
+                //}
             } else {
                 self.image = image
             }

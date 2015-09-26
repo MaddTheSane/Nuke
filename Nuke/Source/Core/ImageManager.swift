@@ -192,7 +192,7 @@ extension ImageManager: ImageManagerLoaderDelegate {
         }
     }
 
-    internal func imageLoader(imageLoader: ImageManagerLoader, imageTask: ImageTask, didCompleteWithImage image: UIImage?, error: ErrorType?) {
+    internal func imageLoader(imageLoader: ImageManagerLoader, imageTask: ImageTask, didCompleteWithImage image: NukeImage?, error: ErrorType?) {
         let imageTask = imageTask as! ImageTaskInternal
         if let image = image {
             imageTask.response = ImageResponse.Success(image, ImageResponseInfo(fastResponse: false))

@@ -23,6 +23,7 @@ public class ImageDecoder: ImageDecoding {
         #elseif os(watchOS)
             return UIImage(data: data, scale: WKInterfaceDevice.currentDevice().screenScale)
 		#elseif os(OSX)
+			//TODO: scaling info
 			return NSImage(data: data)
 		#else
 			fatalError("Unknown Architecture")

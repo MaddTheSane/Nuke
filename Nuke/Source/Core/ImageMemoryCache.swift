@@ -56,10 +56,16 @@ public class ImageMemoryCache: ImageMemoryCaching {
         self.cache.setObject(response, forKey: key, cost: cost)
     }
     
-    public func costForImage(image: UIImage) -> Int {
+    public func costForImage(image: NukeImage) -> Int {
+		#if os(OSX)
+			//TODO: OS X port
+			//let bits = image.
+			return 1
+			#else
         let imageRef = image.CGImage
         let bits = CGImageGetWidth(imageRef) * CGImageGetHeight(imageRef) * CGImageGetBitsPerPixel(imageRef)
         return bits / 8
+		#endif
     }
     
     public class func recommendedCacheTotalLimit() -> Int {
