@@ -1,4 +1,4 @@
-<p align="center"><img src="https://cloud.githubusercontent.com/assets/1567433/6684993/5971ef08-cc3a-11e4-984c-6769e4931497.png" height="100"/>
+<p align="center"><img src="https://cloud.githubusercontent.com/assets/1567433/10440878/a7c6e468-714b-11e5-9b12-baef482c37c1.png" height="100"/>
 
 <p align="center">
 <a href="https://cocoapods.org"><img src="https://img.shields.io/cocoapods/v/Nuke.svg"></a>
@@ -20,39 +20,39 @@ Nuke.taskWithURL(URL) {
 3. [Design](#h_design)
 4. [Installation](#installation)
 5. [Requirements](#h_requirements)
-6. [Contribution](#h_contribution)
+6. [Satellite Projects](#h_satellite_projects)
 
 ## <a name="h_features"></a>Features
 
 - Zero config
+- Beautiful [playground](https://cloud.githubusercontent.com/assets/1567433/10491357/057ac246-72af-11e5-9c60-6f30e0ea9d52.png) included
 - Performant, asynchronous, thread safe
-- Optional [Alamofire](https://github.com/Alamofire/Alamofire) integration
-- Optional [FLAnimatedImage](https://github.com/Flipboard/FLAnimatedImage) integration
+- Optional [Alamofire plugin](https://github.com/kean/Nuke-Alamofire-Plugin)
+- Optional [AnimatedImage plugin](https://github.com/kean/Nuke-AnimatedImage-Plugin)
 
 ##### Loading
 - Uses [NSURLSession](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSURLSession_class/) with [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2) support
 - Uses a single data task for multiple equivalent requests
-- [Intelligent preheating](https://github.com/kean/Nuke/wiki/Image-Preheating-Guide) of images close to the viewport
+- [Automated preheating](https://github.com/kean/Nuke/wiki/Image-Preheating-Guide) of images close to the viewport
 
 ##### Caching
 - Doesn't reinvent caching, relies on [HTTP cache](https://tools.ietf.org/html/rfc7234) and its implementation in [Foundation](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/URLLoadingSystem/URLLoadingSystem.html)
 - Caching is completely transparent to the client
-- Two cache layers including [top level memory cache](https://github.com/kean/Nuke/wiki/Image-Caching-Guide) for decompressed images
+- Two cache layers including [auto purging memory cache](https://github.com/kean/Nuke/wiki/Image-Caching-Guide)
 
 ##### Decoding and Processing
-- Apply image filters
+- Create and apply image filters
 - Background image decompression and scaling in a single step
-- Scale large images (~6000x4000 px) and prepare them for display with ease
 - Resize loaded images to [fit displayed size](https://developer.apple.com/library/ios/qa/qa1708/_index.html)
 
 ##### Advanced
-- Image decoder composition
-- Image filter composition
+- Compose image filters
+- Compose image decoders
 - Customize different parts of the framework using dependency injection
 
 ## <a name="h_getting_started"></a>Getting Started
 - Download the latest [release](https://github.com/kean/Nuke/releases) version
-- Experiment with Nuke APIs in a Swift playground
+- Experiment with Nuke APIs in a Swift [playground](https://cloud.githubusercontent.com/assets/1567433/10491357/057ac246-72af-11e5-9c60-6f30e0ea9d52.png)
 - Take a look at the demo project, it's easy to install with `pod try Nuke` command
 - [Install](#installation), `import Nuke` and enjoy!
 
@@ -69,7 +69,7 @@ Nuke.taskWithURL(imageURL) {
 #### Adding Request Options
 
 ```swift
-var request = ImageRequest(URL: imageURL)
+var request = ImageRequest(URLRequest: <#NSURLRequest#>)
 request.targetSize = CGSize(width: 300.0, height: 400.0) // Set target size in pixels
 request.contentMode = .AspectFill
 
@@ -95,7 +95,9 @@ Nuke.taskWithRequest(request) { response in
 
 ```swift
 let task = Nuke.taskWithURL(imageURL).resume()
-let progress = task.progress // Use NSProgress
+task.progress = { completed, total in
+   // Update progress
+}
 let state = task.state // Track task state
 task.completion { // Add multiple completions, even for completed task
     let image = $0.image
@@ -166,10 +168,17 @@ Nuke.startPreheatingImages(requests: requests)
 Nuke.stopPreheatingImages(requests: requests)
 ```
 
+#### Automate Preheating
+
+```swift
+let preheater = ImagePreheatingControllerForCollectionView(collectionView: <#collectionView#>)
+preheater.delegate = self // Signals when preheat window changes
+```
+
 #### Customizing Image Manager
 
 ```swift
-let dataLoader: ImageDataLoading = <#data_loader#>
+let dataLoader: ImageDataLoading = <#dataLoader#>
 let decoder: ImageDecoding = <#decoder#>
 let cache: ImageMemoryCaching = <#cache#>
 
@@ -193,39 +202,43 @@ ImageManager.shared = ImageManager(configuration: configuration)
 
 ### [CocoaPods](http://cocoapods.org)
 
-To install Nuke add a dependency in your Podfile:
+To install Nuke add a dependency to your Podfile:
 ```ruby
-# platform :ios, '8.0'
-# platform :watchos, '2.0'
+# source 'https://github.com/CocoaPods/Specs.git'
 # use_frameworks!
-pod 'Nuke'
+# platform :ios, "8.0" / :watchos, "2.0" / :osx, "10.9"
+
+pod "Nuke"
+pod "Nuke-Alamofire-Plugin" # optional
+pod "Nuke-AnimatedImage-Plugin" # optional
 ```
-
-By default it will install these subspecs (if they are available for your platform):
-- `Nuke/Core` - core classes
-- `Nuke/UI` - UI components
-
-There are two more optional subspec:
-- `Nuke/Alamofire` - [Alamofire](https://github.com/Alamofire/Alamofire) integration
-- `Nuke/GIF` - [FLAnimatedImage](https://github.com/Flipboard/FLAnimatedImage) integration
 
 ### [Carthage](https://github.com/Carthage/Carthage)
 
- Nuke has a limited Carthage support that doesn't feature [FLAnimatedImage](https://github.com/Flipboard/FLAnimatedImage) and [Alamofire](https://github.com/Alamofire/Alamofire) integration. To install Nuke add a dependency to your Cartfile:
+To install Nuke add a dependency to your Cartfile:
 ```
-github 'Nuke'
+github "kean/Nuke"
+github "kean/Nuke-Alamofire-Plugin" # optional
 ```
 
-## <a name="h_requirements"></a>Requirements
-- iOS 8.0+ / watchOS 2.0+
+### Import
+
+Import installed modules in your source files
+```swift
+import Nuke
+import NukeAlamofirePlugin
+import NukeAnimatedImagePlugin
+```
+
+## <a name="h_requirements"></a>[Requirements](https://github.com/kean/Nuke/wiki/Supported-Platforms)
+- iOS 8.0+ / watchOS 2.0+ / OS X 10.9+
 - Xcode 7.0+, Swift 2.0+
 
-## <a name="h_contribution"></a>Contribution
+## <a name="h_satellite_projects"></a>Satellite Projects
 
-- If you **need help**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/iosnuke). (Tag 'iosnuke')
-- If you **found a bug**, and can provide steps to reproduce it, open an issue.
-- If you **have a feature request**, open an issue.
-- If you **want to contribute**, branch of the `develop` branch and submit a pull request.
+- [Nuke Alamofire Plugin](https://github.com/kean/Nuke-Alamofire-Plugin) - Alamofire plugin for Nuke that allows you to use Alamofire for networking
+- [Nuke AnimatedImage Plugin](https://github.com/kean/Nuke-AnimatedImage-Plugin) - FLAnimatedImage plugin for Nuke that allows you to load and display animated GIFs
+- [Nuke Integration Tests](https://github.com/kean/Nuke-Integration-Tests) - Contains CocoaPods and Carthage integration tests for Nuke
 
 ## Contacts
 
